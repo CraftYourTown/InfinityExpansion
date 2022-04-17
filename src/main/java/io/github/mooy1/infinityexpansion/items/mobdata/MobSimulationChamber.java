@@ -2,6 +2,8 @@ package io.github.mooy1.infinityexpansion.items.mobdata;
 
 import javax.annotation.Nonnull;
 
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -25,6 +27,9 @@ import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
+
+import java.util.Objects;
+import java.util.Random;
 
 public final class MobSimulationChamber extends TickingMenuBlock implements EnergyNetComponent {
 
@@ -174,10 +179,34 @@ public final class MobSimulationChamber extends TickingMenuBlock implements Ener
         BlockStorage.addBlockInfo(b.getLocation(), "xp", String.valueOf(xp + card.tier.xp));
 
         ItemStack item = card.drops.getRandom();
+
+        //System.out.println(card);
+        if (card == MobDataCard.CARDS.get("WITHER_DATA_CARD")) {
+            int i = new Random().nextInt(100);
+            int ii = new Random().nextInt(100);
+            //System.out.println("here  | i=" + i + "  |  ii=" + ii);
+
+            // Compressed Carbon
+            if (i <= 50 && (!(item.getType() == Material.NETHER_STAR))) {
+                //System.out.println("here1  " + i);
+                giveDrops(item, inv);
+                return;
+            }
+
+            // Nether Stars
+            if (ii <= 30 && (!(Objects.equals(item, new SlimefunItemStack(SlimefunItems.COMPRESSED_CARBON, 8))))) {
+                //System.out.println("here2  " + ii);
+                giveDrops(item, inv);
+            }
+        } else {
+            giveDrops(item,inv);
+        }
+    }
+
+    private void giveDrops(@Nonnull ItemStack item, @Nonnull BlockMenu inv) {
         if (inv.fits(item, OUTPUT_SLOTS)) {
             inv.pushItem(item.clone(), OUTPUT_SLOTS);
-        }
-        else if (inv.hasViewer()) {
+        } else if (inv.hasViewer()) {
             inv.replaceExistingItem(STATUS_SLOT, NO_ROOM_ITEM);
         }
     }
