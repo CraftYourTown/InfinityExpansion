@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import io.github.thebusybiscuit.slimefun4.core.attributes.DistinctiveItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -49,7 +50,7 @@ import me.mrCookieSlime.Slimefun.api.inventory.DirtyChestMenu;
  * Thanks to FluffyBear for stuff to learn from
  */
 @ParametersAreNonnullByDefault
-public final class StorageUnit extends MenuBlock {
+public final class StorageUnit extends MenuBlock implements DistinctiveItem {
 
     /* Namespaced keys */
     static final NamespacedKey EMPTY_KEY = InfinityExpansion.createKey("empty"); // key for empty item
@@ -208,6 +209,11 @@ public final class StorageUnit extends MenuBlock {
         meta.getPersistentDataContainer().set(ITEM_KEY, PersistentType.ITEM_STACK_OLD, displayItem);
         meta.getPersistentDataContainer().set(AMOUNT_KEY, PersistentDataType.INTEGER, amount);
         return meta;
+    }
+
+    @Override
+    public boolean canStack(@Nonnull ItemMeta sfItemMeta, @Nonnull ItemMeta itemMeta) {
+        return sfItemMeta.getPersistentDataContainer().equals(itemMeta.getPersistentDataContainer());
     }
 
     @Nullable
